@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: cloud_gateway_service
+  cloud:
+    gateway:
+      routes:
+        - id: user_service
+          uri: lb://user_service
+          predicates: path=/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: user_service
+                fallback: forward:/userServiceFallBack
+        - id: admin_service
+          uri: lb://admin_service
+          predicates: path=/models/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: admin_service
+                fallback: forward:/adminServiceFallBack
+
+server:
+  port: 6968
+
+hystrix:
+  command:
+    fallback:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3993
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
