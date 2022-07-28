@@ -24,6 +24,14 @@ spring:
 server:
   port: 6968
 
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:7072/eureka/
+  instance: localhost
+
 hystrix:
   command:
     fallback:
